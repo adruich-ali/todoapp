@@ -1,6 +1,8 @@
-import React,{useRef, useState} from 'react';
+import React,{useState} from 'react';
 import { connect } from 'react-redux';
-import { addTodos, removeTodos, updateTodo, completeTodos } from '../redux/reducer';
+import { addTodos} from '../redux/reducer';
+import {GoPlus} from "react-icons/go"
+import { motion } from "framer-motion"
 
 
 const mapStateToProps = (state)=>{
@@ -11,9 +13,6 @@ const mapStateToProps = (state)=>{
 const mapDispatchToProps = (dispatch)=>{
     return{
         addTodo:(obj) => dispatch(addTodos(obj)),
-        removeTodo: (id) => dispatch(removeTodos(id)),
-        updateTodo:(obj)=> dispatch(updateTodo(obj)), 
-        completeTodos:(id)=> dispatch(completeTodos(id)),
     }
 }
 
@@ -24,15 +23,36 @@ const Todos = (props) => {
     const handleChange = (e)=>{
         setTodo(e.target.value);
     };
-    console.log("store props", props)
+    const add = ()=>{
+        if(todo === ""){
+            alert("Input is Empty Add Todo")
+        }else{
+            props.addTodo({
+                id:Math.floor(Math.random() * 1000),
+                item:todo,
+                completed:false,
+            })
+            setTodo("");
+    
+        }
+    }
     return (
         <div className='addTodos'>
-        <input type="text" onChange={(e)=>handleChange(e)} className="todo-input" />
-        <button className='add-btn' onClick={() => props.addTodo({
-            id:Math.floor(Math.random() * 1000),
-            item:todo,
-            completed:false,
-        })}>Add</button>
+        <input 
+        type="text" 
+        onChange={(e)=>handleChange(e)} 
+        className="todo-input" 
+        value={todo}
+        />
+        <motion.button 
+        whileHover={{scale:1.1}}
+        whileTap={{scale:0.9}}
+
+        className='add-btn' 
+        onClick={() => add()}>
+            <GoPlus/>
+
+        </motion.button>
         <br />
         </div>
     )
